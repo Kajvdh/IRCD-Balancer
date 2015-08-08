@@ -431,6 +431,7 @@ var ProxyServer = function (config_file) {
     printStats();
 
     return {
+        rehashpools: rehashpools,
         rehash: rehash,
         start: start,
         stop: stop,
@@ -537,7 +538,7 @@ var control = function (data, out) {
             proxy_server.rehashpools();
             break;
 
-        case 'rehash2':
+        case 'restart':
             proxy_server.stop();
             proxy_server.rehash();
             proxy_server.start();
