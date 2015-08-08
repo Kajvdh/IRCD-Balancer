@@ -161,7 +161,7 @@ var SocketHandler = function (config) {
             socket.destroy();
             return;
         }
-        
+
         log('Piping ' + client_ip + ' to ' + ircd.host + ':' + ircd.port, 4);
         var completePiping = function() {
             if (typeof ircd.webirc_pass === 'string') {
@@ -225,7 +225,7 @@ var SocketHandler = function (config) {
                 }
             }
         });
-        
+
         return choices[Math.floor(Math.random() * choices.length)];
     };
 
@@ -414,6 +414,10 @@ var ProxyServer = function (config_file) {
         _.delay(printStats, 1000);
     };
 
+    var rehashpools = function () {
+        config.reload();
+    };
+
 
     var rehash = function () {
         config.reload();
@@ -452,7 +456,7 @@ var Config = function (file_name) {
             cconf = {},
             tmp_conf,
             that = this;
-        
+
 
         try {
             delete require.cache[file_name];
@@ -476,7 +480,7 @@ var Config = function (file_name) {
         return {new_config: nconf, changed_config: cconf};
     };
 
-    
+
     return {
         config: config,
         reload: reload
@@ -530,6 +534,10 @@ var control = function (data, out) {
             break;
 
         case 'rehash':
+            proxy_server.rehashpools();
+            break;
+
+        case 'rehash2':
             proxy_server.stop();
             proxy_server.rehash();
             proxy_server.start();
@@ -563,7 +571,7 @@ if (process.argv.indexOf('-d') === -1) {
 
     (function () {
         var control_socket, client_socket;
-        
+
         logControl = function (data) {
             if (client_socket) {
                 if (typeof data === 'string' || typeof data === 'number') {
